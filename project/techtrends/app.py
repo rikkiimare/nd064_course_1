@@ -5,11 +5,15 @@ from werkzeug.exceptions import abort
 import logging
 from datetime import datetime
 
+# Global variable
+connection_count = 0
+
 # Function to get a database connection.
 # This function connects to database with the name `database.db`
 def get_db_connection():
     connection = sqlite3.connect('database.db')
     connection.row_factory = sqlite3.Row
+    global connection_count
     connection_count += 1
     return connection
 
@@ -74,28 +78,23 @@ def create():
 # Define the metrics functionality
 @app.route('/metrics')
 def metrics():
-    try:
-        connection = get_db_connection()
-        connection.cursor()
-        posts = connection.execute('SELECT * FROM posts').fetchall()
-        connection.close()
-        post_num = len(posts)
-        data = {"db_connection_count": connection_count,"post_count": post_num}
-        return data
-    except Exception:
-        return {'result': 'ERROR - No metrics'}, 500
+    cnct = get_db_connection()
+    posts = cnct.execute('SELECT * FROM posts').fetchall()
+    cnct.close()
+    post_cnt = len(posts)
+    data = {"db_connection_count": connection_count, "post_count": post_cnt}
+    return data
 
 # Define the health check functionality
 @app.route('/healthz')
 def healthz():
-    try:
-        connection = get_db_connection()
-        connection.cursor()
-        connection.execute('SELECT * FROM posts')
-        connection.close()
-        return {'result': 'OK - healthy'}
-    except Exception:
-        return {'result': 'ERROR - unhealthy'}, 500
+    response = app.response_class(
+        response = json.dumps({"result":"OK - healthy"}),
+        status = 200,
+        mimetype = 'application/json'
+    )
+    app.logger.info('healthz status request successful')
+    return response
 
 # Add messages to the Log
 def log_msg(msg):
@@ -104,5 +103,5 @@ def log_msg(msg):
 # start the application on port 3111
 if __name__ == "__main__":
     # Stream logs to a file, and set the default log level to DEBUG
-    logging.basicConfig(filename='app.log',level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
     app.run(host='0.0.0.0', port='3111')

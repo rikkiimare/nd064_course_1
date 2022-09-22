@@ -1,8 +1,8 @@
 ## Docker commands used to build the application
-docker build -t techtrends -f ./Dockerfile .
+docker build -t techtrends -f ./Dockerfile . 
 
 ## Docker commands used to run the application
-docker run -d -p 7111:3111 techtrends 
+docker run -d -p 7111:3111 techtrends
 
 ## Docker commands used to get the application logs
 docker logs 8071f81c229d

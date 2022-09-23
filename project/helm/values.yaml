@@ -19,12 +19,10 @@ ports:
     protocol: TCP
 
 livenessProbe:
-  httpGet:
     path: /healthz
     port: 3111
 
 readinessProbe:
-  httpGet:
     path: /healthz
     port: 3111
 

@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: techtrends
   labels:
     app: techtrends
     app.kubernetes.io/instance: techtrends-{{ .Values.namespace.name }}
     tag: latest
+  name: techtrends
   namespace: {{ .Values.namespace.name }}
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -27,7 +27,7 @@ spec:
                 protocol: TCP
           livenessProbe:
             httpGet:
-              path: {{ .Values.livenessProbe.path }}
+              path: {{ .Values.livenessprobe.path }}
               port: {{ .Values.containerPort }}
           readinessProbe:
             httpGet:

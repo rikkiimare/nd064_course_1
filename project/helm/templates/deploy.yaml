@@ -4,6 +4,7 @@ metadata:
   name: techtrends
   labels:
     app: techtrends
+    app.kubernetes.io/instance: techtrends-{{ .Values.namespace.name }}
     tag: latest
   namespace: {{ .Values.namespace.name }}
 spec:

@@ -23,16 +23,16 @@ spec:
         - image: riccardopixel/{{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.containerPort }}
+            - containerPort: {{ .Values.service.targetPort }}
                 protocol: TCP
           livenessProbe:
             httpGet:
               path: {{ .Values.livenessProbe.path }}
-              port: {{ .Values.containerPort }}
+              port: {{ .Values.livenessProbe.port }}
           readinessProbe:
             httpGet:
               path: {{ .Values.readinessProbe.path }}
-              port: {{ .Values.containerPort }}
+              port: {{ .Values.readinessProbe.port }}
           resources:
             requests:
               memory: {{ .Values.resources.requests.memory }}

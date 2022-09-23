@@ -19,12 +19,12 @@ ports:
     protocol: TCP
 
 livenessProbe:
-    path: /healthz
-    port: 3111
+  path: /healthz
+  port: 3111
 
 readinessProbe:
-    path: /healthz
-    port: 3111
+  path: /healthz
+  port: 3111
 
 resources:
   requests:

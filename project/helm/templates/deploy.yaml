@@ -20,7 +20,8 @@ spec:
         tag: latest
     spec:
       containers:
-        - image: riccardopixel/{{ .Values.image.repository }}:{{ .Values.image.tag }}
+        - name: techtrends
+          image: riccardopixel/{{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             protocol: TCP

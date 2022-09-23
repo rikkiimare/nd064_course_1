@@ -23,7 +23,7 @@ spec:
         - image: riccardopixel/{{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.service.targetPort }}
+            - containerPort: 3111
                 protocol: TCP
           livenessProbe:
             httpGet:

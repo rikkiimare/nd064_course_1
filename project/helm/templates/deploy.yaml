@@ -27,7 +27,7 @@ spec:
                 protocol: TCP
           livenessProbe:
             httpGet:
-              path: {{ .Values.livenessprobe.path }}
+              path: {{ .Values.livenessProbe.path }}
               port: {{ .Values.containerPort }}
           readinessProbe:
             httpGet:

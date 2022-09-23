@@ -15,8 +15,7 @@ image:
 replicaCount: 1
 
 ports:
-  - containerPort: 3111
-    protocol: TCP
+  protocol: TCP
 
 livenessProbe:
   path: /healthz

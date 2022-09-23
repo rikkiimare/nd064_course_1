@@ -20,12 +20,11 @@ spec:
         tag: latest
     spec:
       containers:
-      - name: techtrends
-        image: riccardopixel/{{ .Values.image.repository }}:{{ .Values.image.tag }}
+      - image: riccardopixel/{{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
-        - containerPort: {{ .Values.containerPort }}
-            protocol: TCP
+          - containerPort: {{ .Values.containerPort }}
+              protocol: TCP
         livenessProbe:
           httpGet:
             path: {{ .Values.livenessProbe.path }}

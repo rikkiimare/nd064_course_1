@@ -1,12 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app.kubernetes.io/instance: techtrends-{{ .Values.namespace.name }}
   name: techtrends
   namespace: {{ .Values.namespace.name }}
 spec:
-  selector:
-    matchLabels:
-      app: techtrends
   selector:
     app: techtrends
   ports:

@@ -6,6 +6,7 @@ from flask import Flask, jsonify, json, render_template, request, url_for, redir
 from werkzeug.exceptions import abort
 import logging
 from datetime import datetime
+import sys
 
 # Global variable
 connection_count = 0
@@ -45,16 +46,17 @@ def index():
 def post(post_id):
     post = get_post(post_id)
     if post is None:
-      log_msg('None existing article accessed - 404 returned')
-      return render_template('404.html'), 404
+#       log_msg('None existing article accessed - 404 returned')
+        logger.error('"{id}" NOT FOUND - ERROR 404'.format(id=post_id))
+        return render_template('404.html'), 404
     else:
-      log_msg('Article "{title}" retrieved'.format(title=post['title']))
-      return render_template('post.html', post=post)
+        logger.info('Article "{title}" retrieved'.format(title=post['title']))
+        return render_template('post.html', post=post)
 
 # Define the About Us page
 @app.route('/about')
 def about():
-    log_msg('About Us page retrieved')
+    logger.info('Access "About Us" page')
     return render_template('about.html')
 
 # Define the post creation functionality
@@ -72,7 +74,7 @@ def create():
                          (title, content))
             connection.commit()
             connection.close()
-            log_msg('New article "{titled}" added'.format(titled=title))
+            logger.info('New article "{titled}" added'.format(titled=title))
             return redirect(url_for('index'))
 
     return render_template('create.html')
@@ -95,15 +97,28 @@ def healthz():
         status = 200,
         mimetype = 'application/json'
     )
-    app.logger.info('healthz status request successful')
+    # app.logger.info('healthz status request successful')
+    logger.info('healthz status request successful')
     return response
 
 # Add messages to the Log
-def log_msg(msg):
-    app.logger.info('{time}', '{message}'.format(time=datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), message=msg))
+#def log_msg(msg):
+#    app.logger.info('{time}', '{message}'.format(time=datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), message=msg))
 
 # start the application on port 3111
 if __name__ == "__main__":
     # Stream logs to a file, and set the default log level to DEBUG
-    logging.basicConfig(level=logging.DEBUG)
+
+    # file, stdout & stderr handlers
+    file_handler = logging.FileHandler("app.log")
+    stdout_handler = logging.StreamHandler(sys.stdout)
+    stderr_handler = logging.StreamHandler(sys.stderr)
+    handlers = [file_handler, stdout_handler, stderr_handler]
+
+    # basicConfig
+    logging.basicConfig(format="%(asctime)s:%(levelname)s:%(name)s:%(message)s",
+                        handlers=handlers)
+    logger: logging.Logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+
     app.run(host='0.0.0.0', port='3111')
